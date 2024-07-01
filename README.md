@@ -17,9 +17,11 @@ This is a simple Ethereum token contract implemented in Solidity. It allows for 
 # Contract Overview
 The Token contract is a basic implementation of an ERC20-like token. It features the following components:
 
-owner: The address that deploys the contract and holds the initial supply of tokens.
-_balances: A mapping of addresses to their token balances.
-_totalSupply: The total supply of tokens in the contract.
+1) owner: The address that deploys the contract and holds the initial supply of tokens. <br>
+
+2) _balances: A mapping of addresses to their token balances. <br>
+
+3) _totalSupply: The total supply of tokens in the contract.
 # Usage
 Constructor
 The contract constructor initializes the contract with an initial supply of tokens. The deploying address becomes the owner of the contract and holds the entire initial supply.
