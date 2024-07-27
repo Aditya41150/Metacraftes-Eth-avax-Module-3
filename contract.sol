@@ -54,11 +54,11 @@ contract Token {
         return true;
     }
 
-    function allowance(address owner, address spender) public view returns (uint256) {
-        return _allowances[owner][spender];
+    function allowance(address tokenOwner, address spender) public view returns (uint256) {
+        return _allowances[tokenOwner][spender];
     }
 
-    function transferFrom(address from, address to, uint256 amount) public sufficientAmount(amount) returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public returns (bool) {
         require(amount <= _allowances[from][msg.sender], "Allowance exceeded");
         _transfer(from, to, amount);
         _approve(from, msg.sender, _allowances[from][msg.sender] - amount);
@@ -66,25 +66,31 @@ contract Token {
     }
 
     function _mint(address account, uint256 amount) internal {
+        require(account != address(0), "Mint to the zero address");
         _totalSupply += amount;
         _balances[account] += amount;
         emit Transfer(address(0), account, amount);
     }
 
     function _burn(address account, uint256 amount) internal {
+        require(account != address(0), "Burn from the zero address");
         _totalSupply -= amount;
         _balances[account] -= amount;
         emit Transfer(account, address(0), amount);
     }
 
     function _transfer(address from, address to, uint256 amount) internal {
+        require(from != address(0), "Transfer from the zero address");
+        require(to != address(0), "Transfer to the zero address");
         _balances[from] -= amount;
         _balances[to] += amount;
         emit Transfer(from, to, amount);
     }
 
-    function _approve(address owner, address spender, uint256 amount) internal {
-        _allowances[owner][spender] = amount;
-        emit Approval(owner, spender, amount);
+    function _approve(address tokenOwner, address spender, uint256 amount) internal {
+        require(tokenOwner != address(0), "Approve from the zero address");
+        require(spender != address(0), "Approve to the zero address");
+        _allowances[tokenOwner][spender] = amount;
+        emit Approval(tokenOwner, spender, amount);
     }
 }
