@@ -20,11 +20,32 @@ contract Mtoken is ERC20 {
 
     // Function to mint tokens, restricted to contract owner
     function mint(address to, uint256 amount) external onlyOwner {
-        _mint(to, amount);  // Corrected mint function to include recipient address
+        _mint(to, amount);
     }
 
-    // Function to burn tokens, anyone can call this to burn their own tokens
+    // Function to burn tokens
     function burn(uint256 amount) external {
-        _burn(msg.sender, amount);  // Burn tokens from the caller's account
+        _burn(msg.sender, amount);
+    }
+
+    //  transfers tokens from sender to recipient
+    function transfer(address recipient, uint256 amount) public override returns (bool) {
+        require(recipient != address(0), "Transfer to the zero address");
+        require(balanceOf(msg.sender) >= amount, "Insufficient balance");
+        
+        _transfer(msg.sender, recipient, amount);
+        return true;
+    }
+
+    // transfers tokens on behalf of another address
+    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+        require(sender != address(0), "Transfer from the zero address");
+        require(recipient != address(0), "Transfer to the zero address");
+        require(balanceOf(sender) >= amount, "Insufficient balance");
+        require(allowance(sender, msg.sender) >= amount, "Transfer amount exceeds allowance");
+        
+        _transfer(sender, recipient, amount);
+        _approve(sender, msg.sender, allowance(sender, msg.sender) - amount);
+        return true;
     }
 }
